@@ -1,0 +1,20 @@
+tr.exceed {
+    color: red;
+}
+
+tr.notexceed {
+    color: green;
+}
+
+.table_meals tr td {
+    font-size: 16px;
+    font-family: "DejaVu Sans";
+    min-width: 300px;
+    border: 1px solid black;
+    padding-left: 5px;
+    height: 30px;
+}
+
+.table_meals {
+    border-collapse: collapse;
+}
