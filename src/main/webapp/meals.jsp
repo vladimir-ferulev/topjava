@@ -16,15 +16,9 @@
 <body>
 <table class="table_meals">
     <tr>
-        <td>
-            Дата/Время
-        </td>
-        <td>
-            Описание
-        </td>
-        <td>
-            Калории
-        </td>
+        <td>Дата/Время</td>
+        <td>Описание</td>
+        <td>Калории</td>
     </tr>
     <c:forEach var="meal" items="${listMeals}">
         <tr class="${meal.exceed ? 'exceed' : 'notexceed'}">

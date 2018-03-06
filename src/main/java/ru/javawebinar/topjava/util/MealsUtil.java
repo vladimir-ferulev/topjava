@@ -113,16 +113,4 @@ public class MealsUtil {
         return new MealWithExceed(meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
     }
 
-
-
-    public static List<MealWithExceed> convertToExceed(List<Meal> meals, int caloriesPerDay) {
-        Collection<List<Meal>> list = meals.stream()
-                .collect(Collectors.groupingBy(Meal::getDate)).values();
-
-        return list.stream().flatMap(dayMeals -> {
-            boolean exceed = dayMeals.stream().mapToInt(Meal::getCalories).sum() > caloriesPerDay;
-            return dayMeals.stream()
-                    .map(meal -> createWithExceed(meal, exceed));
-        }).collect(toList());
-    }
 }
