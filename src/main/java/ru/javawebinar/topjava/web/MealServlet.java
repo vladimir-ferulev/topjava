@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.web;
 
+import ru.javawebinar.topjava.dao.MealsDao;
+import ru.javawebinar.topjava.dao.MealsDaoLocal;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealWithExceed;
-import ru.javawebinar.topjava.service.MealsService;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,14 +18,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class MealServlet extends HttpServlet {
-    private MealsService service;
-    private List<MealWithExceed> listMeals;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    private static DateTimeFormatter formatter;
+    private MealsDao dao;
 
-    private int idEdit;
-
-    public MealServlet() {
-        service = new MealsService();
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        dao = new MealsDaoLocal();
+        formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     }
 
     @Override
@@ -33,20 +34,20 @@ public class MealServlet extends HttpServlet {
 
         if (action != null && action.equalsIgnoreCase("delete")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            service.delete(id);
+            dao.delete(id);
             forward = "/meals.jsp";
         } else if (action != null && action.equalsIgnoreCase("add")) {
             forward = "/mealAdd.jsp";
         } else if (action != null && action.equalsIgnoreCase("edit")) {
-            idEdit = Integer.parseInt(request.getParameter("id"));
-            Meal meal = service.getById(idEdit);
+            int idEdit = Integer.parseInt(request.getParameter("id"));
+            Meal meal = dao.getById(idEdit);
             request.setAttribute("mealedit", meal);
             forward = "/mealUpdate.jsp";
         } else {
             forward = "/meals.jsp";
         }
 
-        listMeals = MealsUtil.getFilteredWithExceeded(service.getList(), LocalTime.MIN, LocalTime.MAX, 2000);
+        List<MealWithExceed> listMeals = MealsUtil.getFilteredWithExceeded(dao.getList(), LocalTime.MIN, LocalTime.MAX, 2000);
 
         request.setAttribute("listMeals", listMeals);
         request.getRequestDispatcher(forward).forward(request, response);
@@ -64,13 +65,13 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
         if(id != null) {
             Integer idEdit = Integer.parseInt(id);
-            service.update(idEdit, localDateTime, description, calories);
+            dao.update(new Meal(idEdit, localDateTime, description, calories));
         } else {
-            service.create(localDateTime, description, calories);
+            dao.create(new Meal(0, localDateTime, description, calories));
         }
 
 
-        listMeals = MealsUtil.getFilteredWithExceeded(service.getList(), LocalTime.MIN, LocalTime.MAX, 2000);
+        List<MealWithExceed> listMeals = MealsUtil.getFilteredWithExceeded(dao.getList(), LocalTime.MIN, LocalTime.MAX, 2000);
 
         request.setAttribute("listMeals", listMeals);
         request.getRequestDispatcher("/meals.jsp").forward(request, response);

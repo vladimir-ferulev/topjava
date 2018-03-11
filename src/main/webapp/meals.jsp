@@ -19,7 +19,6 @@
 
 <table class="table_meals">
     <tr>
-        <td width="40">Id</td>
         <td width="200">Дата/Время</td>
         <td width="200">Описание</td>
         <td width="90">Калории</td>
@@ -27,7 +26,6 @@
     </tr>
     <c:forEach var="meal" items="${listMeals}">
         <tr class="${meal.exceed ? 'exceed' : 'notexceed'}">
-            <td><c:out value="${meal.id}"/></td>
             <td><c:out value="${meal.dateTime.toString().replace('T', ' ')}"/></td>
             <td><c:out value="${meal.description}"/></td>
             <td><c:out value="${meal.calories}"/></td>

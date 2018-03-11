@@ -16,8 +16,6 @@
 </head>
 <body>
 <form action="meals" method="post">
-    <label>Id: </label>
-    <input type="text" name="id" value="${mealedit.id}" readonly><br/>
     <label>Дата/Время: </label>
     <input type="datetime-local" name="datetime" value="${mealedit.dateTime}" required><br/>
     <label>Описание: </label>
@@ -25,6 +23,7 @@
     <label>Калории: </label>
     <input type="number" name="calories" value="${mealedit.calories}" required><br/>
     <button type="submit">Обновить</button>
+    <input type="hidden" name="id" value="${mealedit.id}"><br/>
 </form>
 </body>
 </html>
